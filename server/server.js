@@ -9,8 +9,14 @@ const PORT = process.env.PORT || 3000;
 
 connectDB();
 const app = express();
-app.use(cors());
-app.use(cors({ origin: "https://quickkcv.vercel.app" }));
+const corsOptions = {
+  origin: "https://quickkcv.vercel.app",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // to be safe with preflight
 app.use(express.json());
 app.use(express.static("public")); // Serve static files from public directory
 
