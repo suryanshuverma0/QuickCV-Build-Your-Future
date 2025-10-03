@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* styles.css */
+.resume-page {
+  width: 210mm;      /* A4 width */
+  height: 297mm;     /* A4 height */
+  background: white; 
+  padding: 20mm;     /* inner margins */
+  box-sizing: border-box;
+}

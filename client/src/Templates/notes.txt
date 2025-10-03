@@ -1,0 +1,287 @@
+
+import PropTypes from "prop-types";
+import FormTitle from "../components/FormTitle";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { useState } from "react";
+import { IoIosAdd } from "react-icons/io";
+import AddSocialMedia from "../components/AddSocialMedia";
+
+const AboutForm = ({ onItemClick }) => {
+  const [content, setContent] = useState("");
+  const [addSocialMedia, setAddSocialMedia] = useState([]);
+  const [showSocialMedia, setShowSocialMedia] = useState(false);
+
+  const handleAddSocialMedia = () => {
+         setAddSocialMedia([...addSocialMedia, {id:Date.now(), link:""}]);};
+         setShowSocialMedia(true);
+  }
+
+  const handleChange = (value) => {
+    setContent(value);
+  };
+  return (
+    <>
+      <div>
+        <div className="pl-4">
+          <FormTitle
+            title="About yourself"
+            description="Fill your primary information"
+          />
+        </div>
+
+        <form className="w-full p-4 bg-white rounded-lg shadow-sm space-y-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {" "}
+            <div className="flex flex-col">
+              <label
+                htmlFor="name"
+                className="text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="John Doe"
+                className="mt-1 border border-gray-300 rounded-lg p-2 shadow-sm focus:outline-2 focus:outline-gray-500 font-semibold"
+              />
+            </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="designation"
+                className="text-sm font-medium text-gray-700"
+              >
+                Designation
+              </label>
+              <input
+                type="text"
+                id="designation"
+                name="designation"
+                placeholder="Web Developer"
+                className="mt-1 border border-gray-300 rounded-lg p-2 shadow-sm focus focus:outline-2 focus:outline-gray-500 font-semibold"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex flex-col">
+              <label
+                htmlFor="address"
+                className="text-sm font-medium text-gray-700"
+              >
+                Address
+              </label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="123 Main St"
+                className="mt-1 border border-gray-300 rounded-lg p-2 shadow-sm focus:outline-2 focus:outline-gray-500 font-semibold"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="city"
+                className="text-sm font-medium text-gray-700"
+              >
+                City
+              </label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                placeholder="New York"
+                className="mt-1 border border-gray-300 rounded-lg p-2 shadow-sm focus:outline-2 focus:outline-gray-500 font-semibold"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="flex flex-col">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="john.doe@example.com"
+                className="mt-1 border border-gray-300 rounded-lg p-2 shadow-sm focus:outline-2 focus:outline-gray-500 font-semibold"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="phone"
+                className="text-sm font-medium text-gray-700"
+              >
+                Phone
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="(123) 456-7890"
+                className="mt-1 border border-gray-300 rounded-lg p-2 shadow-sm focus:outline-2 focus:outline-gray-500 font-semibold"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="summary"
+              className="text-sm font-medium text-gray-700"
+            >
+              Summary
+            </label>
+            <ReactQuill
+              theme="snow"
+              id="summary"
+              name="summary"
+              value={content}
+              onChange={handleChange}
+              modules={{
+                toolbar: [["bold", "italic", "underline"], ["link"]],
+              }}
+              placeholder="Describe about yourself"
+              className="mt-1 border border-gray-300 rounded-lg p-2 shadow-sm focus:outline-2 focus:outline-gray-500 font-semibold custom-quill-editor"
+            />
+          </div>
+              <div>
+               {show && addSocialMedia.map((social))}
+              </div>
+          <div onClick={handleAddSocialMedia} className="flex items-center text-lg gap-2 text-blue-400 font-semibold cursor-pointer hover:underline">
+            <span>
+              <IoIosAdd />
+            </span>
+            <p>Add Social Link</p>
+          </div>
+        </form>
+
+        <div className="flex justify-between items-center p-4">
+          <button 
+            className="bg-white hover:bg-neutral-800 hover:text-white transition-colors delay-100 border-black border-2 text-black text-sm py-2 px-4 rounded"
+            onClick={() => onItemClick("template")}
+          >
+            Back
+          </button>
+
+          <button
+            className="bg-neutral-900 hover:bg-neutral-800 text-white text-sm py-2 px-4 rounded transition-colors delay-100"
+            onClick={() => onItemClick("education")}
+          >
+            Continue to Education
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+AboutForm.propTypes = {
+  onItemClick: PropTypes.func,
+};
+
+export default AboutForm;
+
+
+
+share part
+
+  const handleShareClick = () => {
+    // Generate a unique shareable link
+    const uniqueId = uuidv4();
+    const baseUrl = "http://localhost:5173"; // Replace with your production URL when deployed
+    const link = `${baseUrl}/resume/${uniqueId}`;
+    setShareableLink(link);
+
+    // Open modal
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
+
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  EmailShareButton,
+  WhatsappShareButton,
+  TelegramShareButton,
+} from "react-share";
+import { FaFacebook, FaTwitter, FaLinkedin, FaEnvelope, FaWhatsapp, FaTelegram } from "react-icons/fa";
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [shareableLink, setShareableLink] = useState("");
+
+      <button
+        onClick={handleShareClick}
+        className="bg-neutral-900 hover:bg-neutral-800 text-white text-sm py-2 px-4 rounded transition-colors delay-100"
+      >
+        Share
+      </button>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 className="text-xl font-semibold mb-4">Share on Social Media</h2>
+            
+            {/* Display Shareable Link */}
+            <div className="mb-4">
+              <p className="text-gray-700">Your Shareable Link:</p>
+              <a
+                href={shareableLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-500 underline"
+              >
+                {shareableLink}
+              </a>
+            </div>
+
+            {/* Social Media Share Buttons */}
+            <div className="flex gap-4 mb-4">
+              <FacebookShareButton url={shareableLink}>
+                <FaFacebook size={32} className="text-blue-600" />
+              </FacebookShareButton>
+              <TwitterShareButton url={shareableLink} title="Check out my resume!">
+                <FaTwitter size={32} className="text-blue-400" />
+              </TwitterShareButton>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                  shareableLink
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FaLinkedin size={32} className="text-blue-700" />
+              </a>
+              <EmailShareButton url={shareableLink} subject="Check out my resume!" body="Here is my professional resume.">
+                <FaEnvelope size={32} className="text-gray-500" />
+              </EmailShareButton>
+              <WhatsappShareButton url={shareableLink} title="Check out my resume!">
+                <FaWhatsapp size={32} className="text-green-500" />
+              </WhatsappShareButton>
+              <TelegramShareButton url={shareableLink} title="Check out my resume!">
+                <FaTelegram size={32} className="text-blue-400" />
+              </TelegramShareButton>
+            </div>
+            <button
+              onClick={handleCloseModal}
+              className="mt-4 bg-neutral-900 hover:bg-neutral-800 text-white py-2 px-4 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}

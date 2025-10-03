@@ -1,0 +1,24 @@
+const validPlatforms = [
+  "website",
+  "facebook",
+  "twitter",
+  "linkedin",
+  "github",
+  "instagram",
+  "others",
+];
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const isValid = addSocialMedia.every(social => 
+    validPlatforms.includes(social.socialPlatform)
+  );
+
+  if (!isValid) {
+    console.error("Invalid social media platform");
+    return;
+  }
+
+  // Proceed with form submission
+};
+validate the social link in the about form

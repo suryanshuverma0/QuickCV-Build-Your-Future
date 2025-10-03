@@ -1,0 +1,16 @@
+.custom-quill-editor {
+  height: 180px;    /* Manually setting width equivalent to 30 cols */
+  resize: none;   /* Ensures no resizing */
+  /* Ensures scrollbars appear when needed */
+}
+
+/* Hide scrollbar but allow scrolling */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, and Opera */
+}
+
