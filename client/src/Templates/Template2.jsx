@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
-
+import { resumeAPI } from "../api/apiService";
 const Template2 = () => {
   const [resume, setResume] = useState(null);
 
   useEffect(() => {
     const fetchResume = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/me`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        if (!res.ok) throw new Error("Failed to fetch resume");
-        const data = await res.json();
-        setResume(data);
+        const res = await resumeAPI.getMe();
+        setResume(res.data);
       } catch (error) {
         console.error(error);
       }

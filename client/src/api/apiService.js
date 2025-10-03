@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "https://quickcv-build-your-future.onrender.com/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -99,6 +99,9 @@ export const resumeAPI = {
   addAbout: (data) => api.post("/create-about-form", data),
   getAbout: () => api.get("/get-about-form-details"),
 
+    getMe: () => api.get("/me"),
+
+
 };
 
 // Password Management APIs
@@ -121,6 +124,10 @@ export const profileImageAPI = {
     }),
   getImage: () => api.get("/profile-image"),
   deleteImage: () => api.delete("/profile-image"),
+
 };
+
+
+
 
 export default api;

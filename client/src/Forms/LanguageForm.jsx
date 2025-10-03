@@ -205,19 +205,8 @@ try {
     console.log("language data to send in backend", languages);
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/create-language-form",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ languages }),
-        }
-      );
-
-      const data = await response.json();
+  const response = await resumeAPI.addLanguage({languages});
+      const data = await response.setLanguageData;
       console.log("data from that education form", data);
       if (response.status === 201) {
         toast.success("Data saved successfully!", {
