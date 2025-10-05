@@ -165,7 +165,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-export default registerUser;
 
 
 const verifyUser = async (req, res) => {
