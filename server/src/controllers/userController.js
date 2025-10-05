@@ -96,9 +96,9 @@ const registerUser = async (req, res) => {
     //     <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
     //   `,
     // });
-    // console.log("Activation email sent to:", user.email);
+    console.log("Activation email sent to:", user.email);
 
-    // res.status(201).json({
+    res.status(201).json({
       message:
         "Registration successful. Check your email to activate your account.",
     });
