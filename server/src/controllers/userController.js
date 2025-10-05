@@ -140,7 +140,7 @@ const registerUser = async (req, res) => {
     await user.save();
 
     // Backend verification link
-    const verificationLink = `${process.env.BACKEND_URL}/api/verify-user/${verificationToken}`;
+    const activationLink = `${process.env.CLIENT_URL}/verify-user/${verificationToken}`;
 
     // Send email
     const msg = {
