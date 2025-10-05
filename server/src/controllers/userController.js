@@ -150,12 +150,12 @@ const registerUser = async (req, res) => {
       html: `
         <p>Hello <strong>${user.username}</strong>,</p>
         <p>Thank you for registering. Please click the link below to verify your account:</p>
-        <p><a href="${verificationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Verify Account</a></p>
+        <p><a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Verify Account</a></p>
         <p>If you did not sign up, you can ignore this email.</p>
       `,
     };
 
-    // await sgMail.send(msg);
+    await sgMail.send(msg);
 
     res.status(201).json({
       message: "Registration successful. Check your email to verify your account.",
