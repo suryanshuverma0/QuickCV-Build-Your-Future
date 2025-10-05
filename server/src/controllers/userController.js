@@ -155,7 +155,7 @@ const registerUser = async (req, res) => {
       `,
     };
 
-    await sgMail.send(msg);
+    // await sgMail.send(msg);
 
     res.status(201).json({
       message: "Registration successful. Check your email to verify your account.",
