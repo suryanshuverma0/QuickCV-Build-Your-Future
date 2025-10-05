@@ -71,8 +71,7 @@ const registerUser = async (req, res) => {
       verificationToken,
     });
 
-    await user.save();``
-
+    await user.save();
     // Email activation link
     const activationLink = `${process.env.CLIENT_URL}/verify-user/${verificationToken}`;
     console.log("Activation link for activation:", activationLink);
@@ -87,19 +86,19 @@ const registerUser = async (req, res) => {
       },
     });
 
-    await transporter.sendMail({
-      from: `"No Reply" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: "Account Activation",
-      html: `
-        <h2>Welcome ${user.username}</h2>
-        <p>Please activate your account by clicking the link below:</p>
-        <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
-      `,
-    });
-    console.log("Activation email sent to:", user.email);
+    // await transporter.sendMail({
+    //   from: `"No Reply" <${process.env.EMAIL_USER}>`,
+    //   to: user.email,
+    //   subject: "Account Activation",
+    //   html: `
+    //     <h2>Welcome ${user.username}</h2>
+    //     <p>Please activate your account by clicking the link below:</p>
+    //     <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
+    //   `,
+    // });
+    // console.log("Activation email sent to:", user.email);
 
-    res.status(201).json({
+    // res.status(201).json({
       message:
         "Registration successful. Check your email to activate your account.",
     });
