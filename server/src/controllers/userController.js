@@ -140,7 +140,7 @@ const registerUser = async (req, res) => {
     await user.save();
 
     // Backend verification link
-    const activationLink = `https://quickcv-build-your-future.onrender.com/verify-user/${verificationToken}`;
+    const activationLink = `${process.env.CLIENT_URL}/verify-user/${verificationToken}`;
 
     // Send email
     const msg = {
