@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const BASE_URL = "https://quickcv-build-your-future.onrender.com/api";
+// In production we expect VITE_API_BASE_URL to be set (e.g. https://your-backend.onrender.com/api)
+// When running locally this falls back to the localhost dev server
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -52,16 +55,14 @@ export const resumeAPI = {
   addSkills: (data) => api.post("/create-skill-form", data),
   getSkills: () => api.get("/get-skills-form-details"),
   getSkillDetail: (id) => api.get(`/get-skill-detail/${id}`),
-  updateSkills: (id, data) =>
-    api.put(`/update-skill-data/${id}`, data),
+  updateSkills: (id, data) => api.put(`/update-skill-data/${id}`, data),
   deleteSkills: (id) => api.delete(`/delete-skill-data/${id}`),
 
   // Projects
   addProject: (data) => api.post("/create-project-form", data),
   getProjects: () => api.get("/get-project-form-details"),
   getProjectDetail: (id) => api.get(`/get-project-detail/${id}`),
-  updateProject: (id, data) =>
-    api.put(`/update-project-detail/${id}`, data),
+  updateProject: (id, data) => api.put(`/update-project-detail/${id}`, data),
   deleteProject: (id) => api.delete(`/delete-project-detail/${id}`),
 
   // Achievements
@@ -84,8 +85,7 @@ export const resumeAPI = {
   addLanguage: (data) => api.post("/create-language-form", data),
   getLanguages: () => api.get("/get-language-form-details"),
   getLanguageDetail: (id) => api.get(`/get-language-data/${id}`),
-  updateLanguage: (id, data) =>
-    api.put(`/update-language-data/${id}`, data),
+  updateLanguage: (id, data) => api.put(`/update-language-data/${id}`, data),
   deleteLanguage: (id) => api.delete(`/delete-language-form-data/${id}`),
 
   // Social Media
@@ -99,9 +99,7 @@ export const resumeAPI = {
   addAbout: (data) => api.post("/create-about-form", data),
   getAbout: () => api.get("/get-about-form-details"),
 
-    getMe: () => api.get("/me"),
-
-
+  getMe: () => api.get("/me"),
 };
 
 // Password Management APIs
@@ -124,10 +122,6 @@ export const profileImageAPI = {
     }),
   getImage: () => api.get("/profile-image"),
   deleteImage: () => api.delete("/profile-image"),
-
 };
-
-
-
 
 export default api;
