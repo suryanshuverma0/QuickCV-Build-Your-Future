@@ -116,7 +116,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    console.log("Received registration data:", { username, email });
 
     // Check duplicates
     if (await User.findOne({ username })) {
@@ -126,44 +125,47 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-    // Create verification token
+    // Generate verification token
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
+    // Save user with token
     const user = new User({
       username,
       email,
       password,
       verificationToken,
+      isVerified: false,
     });
 
     await user.save();
 
-    // Send email using SendGrid
-    const activationLink = `${process.env.CLIENT_URL}/verify-user/${verificationToken}`;
+    // Backend verification link
+    const verificationLink = `${process.env.BACKEND_URL}/api/users/verify/${verificationToken}`;
 
+    // Send email
     const msg = {
       to: user.email,
       from: process.env.EMAIL_USER, // verified sender
-      subject: "Activate Your Account",
+      subject: "Activate Your QuickCV Account",
       html: `
-        <h2>Welcome ${user.username}</h2>
-        <p>Please activate your account by clicking the link below:</p>
-        <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
+        <p>Hello <strong>${user.username}</strong>,</p>
+        <p>Thank you for registering. Please click the link below to verify your account:</p>
+        <p><a href="${verificationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Verify Account</a></p>
+        <p>If you did not sign up, you can ignore this email.</p>
       `,
     };
 
     await sgMail.send(msg);
 
-    console.log("Activation email sent to:", user.email);
-
     res.status(201).json({
-      message: "Registration successful. Check your email to activate your account.",
+      message: "Registration successful. Check your email to verify your account.",
     });
   } catch (error) {
     console.error("Registration error:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 
