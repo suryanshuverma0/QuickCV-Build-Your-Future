@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
+const sgMail = require('@sendgrid/mail');
 
 dotenv.config();
 // const registerUser = async (req, res) => {
@@ -43,26 +44,90 @@ dotenv.config();
 //   }
 // };
 
+// const registerUser = async (req, res) => {
+//   try {
+//     const { username, email, password } = req.body;
+//     console.log("Received registration data for activation:", { username, email, password });
+
+//     // Check username/email duplicates
+//     if (await User.findOne({ username })) {
+//       return res
+//         .status(400)
+//         .json({ message: "User already exists with that username" });
+//     }
+//     if (await User.findOne({ email })) {
+//       return res
+//         .status(400)
+//         .json({ message: "User already exists with that email" });
+//     }
+
+//     // Create token for verification
+//     const verificationToken = crypto.randomBytes(32).toString("hex");
+//     console.log("Generated verification token for activation:", verificationToken);
+
+//     const user = new User({
+//       username,
+//       email,
+//       password,
+//       verificationToken,
+//     });
+
+//     await user.save();
+//     // Email activation link
+//     const activationLink = `${process.env.CLIENT_URL}/verify-user/${verificationToken}`;
+//     console.log("Activation link for activation:", activationLink);
+
+//     const transporter = nodemailer.createTransport({
+//       host: process.env.SMTP_HOST,
+//       port: process.env.SMTP_PORT,
+//       secure: false,
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
+
+//     // await transporter.sendMail({
+//     //   from: `"No Reply" <${process.env.EMAIL_USER}>`,
+//     //   to: user.email,
+//     //   subject: "Account Activation",
+//     //   html: `
+//     //     <h2>Welcome ${user.username}</h2>
+//     //     <p>Please activate your account by clicking the link below:</p>
+//     //     <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
+//     //   `,
+//     // });
+//     console.log("Activation email sent to:", user.email);
+
+//     res.status(201).json({
+//       message:
+//         "Registration successful. Check your email to activate your account.",
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 const registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    console.log("Received registration data for activation:", { username, email, password });
+    console.log("Received registration data:", { username, email });
 
-    // Check username/email duplicates
+    // Check duplicates
     if (await User.findOne({ username })) {
-      return res
-        .status(400)
-        .json({ message: "User already exists with that username" });
+      return res.status(400).json({ message: "Username already exists" });
     }
     if (await User.findOne({ email })) {
-      return res
-        .status(400)
-        .json({ message: "User already exists with that email" });
+      return res.status(400).json({ message: "Email already exists" });
     }
 
-    // Create token for verification
+    // Create verification token
     const verificationToken = crypto.randomBytes(32).toString("hex");
-    console.log("Generated verification token for activation:", verificationToken);
 
     const user = new User({
       username,
@@ -72,41 +137,36 @@ const registerUser = async (req, res) => {
     });
 
     await user.save();
-    // Email activation link
+
+    // Send email using SendGrid
     const activationLink = `${process.env.CLIENT_URL}/verify-user/${verificationToken}`;
-    console.log("Activation link for activation:", activationLink);
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    const msg = {
+      to: user.email,
+      from: process.env.EMAIL_USER, // verified sender
+      subject: "Activate Your Account",
+      html: `
+        <h2>Welcome ${user.username}</h2>
+        <p>Please activate your account by clicking the link below:</p>
+        <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
+      `,
+    };
 
-    // await transporter.sendMail({
-    //   from: `"No Reply" <${process.env.EMAIL_USER}>`,
-    //   to: user.email,
-    //   subject: "Account Activation",
-    //   html: `
-    //     <h2>Welcome ${user.username}</h2>
-    //     <p>Please activate your account by clicking the link below:</p>
-    //     <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
-    //   `,
-    // });
+    await sgMail.send(msg);
+
     console.log("Activation email sent to:", user.email);
 
     res.status(201).json({
-      message:
-        "Registration successful. Check your email to activate your account.",
+      message: "Registration successful. Check your email to activate your account.",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Registration error:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
+export default registerUser;
+
 
 const verifyUser = async (req, res) => {
   try {
