@@ -8,107 +8,6 @@ const mongoose = require("mongoose");
 const sgMail = require('@sendgrid/mail');
 
 dotenv.config();
-// const registerUser = async (req, res) => {
-//   try {
-//     const { username, email, password } = req.body;
-//     console.log(username, email, password);
-
-//     const userWithUsername = await User.findOne({ username: username });
-
-//     if (userWithUsername) {
-//       return res
-//         .status(400)
-//         .json({ message: "User already exists with that username" });
-//     }
-
-//     const userWithEmail = await User.findOne({ email: email });
-
-//     if (userWithEmail) {
-//       return res
-//         .status(400)
-//         .json({ message: "User already exists with that email" });
-//     }
-
-//     const user = new User({
-//       username,
-//       email,
-//       password,
-//     });
-
-//     user.save();
-
-//     res.status(201).json(user);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
-// const registerUser = async (req, res) => {
-//   try {
-//     const { username, email, password } = req.body;
-//     console.log("Received registration data for activation:", { username, email, password });
-
-//     // Check username/email duplicates
-//     if (await User.findOne({ username })) {
-//       return res
-//         .status(400)
-//         .json({ message: "User already exists with that username" });
-//     }
-//     if (await User.findOne({ email })) {
-//       return res
-//         .status(400)
-//         .json({ message: "User already exists with that email" });
-//     }
-
-//     // Create token for verification
-//     const verificationToken = crypto.randomBytes(32).toString("hex");
-//     console.log("Generated verification token for activation:", verificationToken);
-
-//     const user = new User({
-//       username,
-//       email,
-//       password,
-//       verificationToken,
-//     });
-
-//     await user.save();
-//     // Email activation link
-//     const activationLink = `${process.env.CLIENT_URL}/verify-user/${verificationToken}`;
-//     console.log("Activation link for activation:", activationLink);
-
-//     const transporter = nodemailer.createTransport({
-//       host: process.env.SMTP_HOST,
-//       port: process.env.SMTP_PORT,
-//       secure: false,
-//       auth: {
-//         user: process.env.EMAIL_USER,
-//         pass: process.env.EMAIL_PASS,
-//       },
-//     });
-
-//     // await transporter.sendMail({
-//     //   from: `"No Reply" <${process.env.EMAIL_USER}>`,
-//     //   to: user.email,
-//     //   subject: "Account Activation",
-//     //   html: `
-//     //     <h2>Welcome ${user.username}</h2>
-//     //     <p>Please activate your account by clicking the link below:</p>
-//     //     <a href="${activationLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Activate Account</a>
-//     //   `,
-//     // });
-//     console.log("Activation email sent to:", user.email);
-
-//     res.status(201).json({
-//       message:
-//         "Registration successful. Check your email to activate your account.",
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: error.message });
-//   }
-// };
-
 
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -165,8 +64,6 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
 
 
 const verifyUser = async (req, res) => {
@@ -274,67 +171,6 @@ const fetchUserDetails = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// const forgotPassword = async (req, res) => {
-//   const { email } = req.body;
-
-//   console.log("email here", email);
-
-//   try {
-//     // 1️⃣ Check if user exists
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(404).json({ error: "User not found" });
-//     }
-
-//     // 2️⃣ Generate token with encoded user id & expiry (1 hour)
-//     const payload = {
-//       id: user._id,
-//       email: user.email,
-//     };
-//     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-//       expiresIn: "1h",
-//     });
-
-//     // 3️⃣ Create reset link
-//     const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
-
-//     // 4️⃣ Setup Gmail SMTP transporter
-//     const transporter = nodemailer.createTransport({
-//       host: process.env.SMTP_HOST, // smtp.gmail.com
-//       port: process.env.SMTP_PORT, // 587
-//       secure: false, // TLS
-//       auth: {
-//         user: process.env.EMAIL_USER, // your Gmail address
-//         pass: process.env.EMAIL_PASS, // 16-char App Password, no spaces
-//       },
-//     });
-
-//     // 5️⃣ Email content
-//     const mailOptions = {
-//       from: `"No Reply" <${process.env.EMAIL_USER}>`,
-//       to: user.email,
-//       subject: "Password Reset Request",
-//       html: `
-//         <h2>Hello ${user.username || "User"}</h2>
-//         <p>You requested a password reset.</p>
-//         <p>Click the link below to reset your password. This link will expire in 1 hour.</p>
-//         <a href="${resetLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Reset Password</a>
-//         <p>If you didn't request this, ignore this email.</p>
-//       `,
-//     };
-
-//     // 6️⃣ Send email
-//     const info = await transporter.sendMail(mailOptions);
-//     console.log("Email sent:", info.response);
-
-//     res.json({ message: "Reset link sent to your email" });
-//   } catch (error) {
-//     console.error("Email sending error:", error.message);
-//     res.status(500).json({ error: error.message });
-//   }
-// };
-
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
@@ -358,29 +194,21 @@ const forgotPassword = async (req, res) => {
     // Send plain resetToken in email
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: `"No Reply" <${process.env.EMAIL_USER}>`,
+       const msg = {
       to: user.email,
-      subject: "Password Reset Request",
+      from: process.env.EMAIL_USER, // verified sender in SendGrid
+      subject: "Reset Your QuickCV Password",
       html: `
         <h2>Hello ${user.username || "User"}</h2>
         <p>You requested a password reset.</p>
-        <p>Click the link below. It will expire in 1 hour and can only be used once.</p>
+        <p>Click the link below to reset your password. This link will expire in 1 hour and can only be used once.</p>
         <a href="${resetLink}" style="background:#000;color:#fff;padding:10px 15px;text-decoration:none;border-radius:5px;">Reset Password</a>
+        <p>If you didn't request this, ignore this email.</p>
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    await sgMail.send(msg);
+
 
     res.json({ message: "Reset link sent to your email" });
   } catch (error) {

@@ -2,6 +2,7 @@ import axios from "axios";
 
 // In production we expect VITE_API_BASE_URL to be set (e.g. https://your-backend.onrender.com/api)
 const BASE_URL = "https://quickcv-build-your-future.onrender.com/api";
+// const BASE_URL = "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: BASE_URL,

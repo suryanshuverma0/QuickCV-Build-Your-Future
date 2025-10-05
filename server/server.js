@@ -5,12 +5,12 @@ const cors = require("cors");
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 connectDB();
 const app = express();
 const corsOptions = {
-  origin: "https://quickkcv.vercel.app",
+  origin: "https://quickkcv.vercel.app/", 
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
